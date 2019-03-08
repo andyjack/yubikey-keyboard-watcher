@@ -14,7 +14,18 @@ Commands:
     remap   - run all the remap commands once and exit
 """)
 
-def fix_mappings():
+def monitor():
+    context = Context()
+    monitor = Monitor.from_netlink(context)
+    monitor.filter_by('input')
+    monitor.filter_by('usb')
+    # polls forever
+    for device in iter(monitor.poll, None):
+        if device.action == 'add' and match(r'.*input\d+$',device.device_path):
+            sleep(2)
+            remap()
+
+def remap():
     run(args='setxkbmap -option ctrl:nocaps', shell=True, check=True)
     run(args='xcape -e Control_L=Escape', shell=True, check=True)
 
@@ -30,17 +41,9 @@ if len(argv) < 2:
     exit(1)
 
 if argv[1] == 'monitor':
-    context = Context()
-    monitor = Monitor.from_netlink(context)
-    monitor.filter_by('input')
-    monitor.filter_by('usb')
-    # polls forever
-    for device in iter(monitor.poll, None):
-        if device.action == 'add' and match(r'.*input\d+$',device.device_path):
-            sleep(2)
-            fix_mappings()
+    monitor()
 elif argv[1] == 'remap':
-    fix_mappings()
+    remap()
 else:
     usage()
     exit(1)
