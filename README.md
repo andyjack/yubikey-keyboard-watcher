@@ -20,6 +20,8 @@ single Caps_Lock keypress:
 
 `apt install python3-pyudev`
 
+Tested on python 3.6.
+
 <!--
  vim:tw=78
 -->
