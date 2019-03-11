@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from ctypes import cdll, c_uint
 from pyudev import Context, Monitor, MonitorObserver
@@ -21,6 +21,9 @@ def monitor():
     monitor.filter_by('usb')
     # polls forever
     for device in iter(monitor.poll, None):
+        # Inserting the yubikey generates several 'add' events, but we don't
+        # want to remap on every one of them.  So filter out a single one, wait
+        # a bit for things to settle, and remap.
         if device.action == 'add' and match(r'.*input\d+$',device.device_path):
             sleep(2)
             remap()
