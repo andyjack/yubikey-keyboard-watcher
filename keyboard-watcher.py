@@ -29,9 +29,15 @@ def monitor():
             remap()
 
 def remap():
-    run(args='setxkbmap -option ctrl:nocaps', shell=True, check=True)
+    # ctrl:nocaps  - caps lock is a control key
+    # compose:ralt - right alt is the compose key, e.g. for accented character entry
+    run(args='setxkbmap -option ctrl:nocaps -option compose:ralt', shell=True, check=True)
     run(args='xcape -e Control_L=Escape', shell=True, check=True)
 
+    # This X11 stuff is to turn off the caps lock *effect*. If it was turned
+    # on, and because above remaps effectively remove the caps lock key,
+    # there's no way to turn off the effect with the keyboard.
+    #
     # https://askubuntu.com/a/80301
     X11 = cdll.LoadLibrary("libX11.so.6")
     display = X11.XOpenDisplay(None)
