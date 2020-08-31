@@ -30,10 +30,10 @@ def monitor():
 
 def remap():
     # compose:ralt - right alt is the compose key, e.g. for accented character entry
-    run(args='setxkbmap -option -option compose:ralt', shell=True, check=True)
+    run(args='setxkbmap -option compose:ralt', shell=True, check=True)
 
     # This X11 stuff is to turn off the caps lock *effect*. If it was turned
-    # on, and because above remaps effectively remove the caps lock key,
+    # on, and you've somehow no longer have a way to send the CAPS LOCK keycode,
     # there's no way to turn off the effect with the keyboard.
     #
     # https://askubuntu.com/a/80301
