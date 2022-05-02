@@ -34,8 +34,8 @@ def monitor():
 
 
 def remap():
-    # compose:ralt - right alt is the compose key, e.g. for accented character entry
-    run(args='setxkbmap -option compose:ralt', shell=True, check=True)
+    # Set right alt to compose key. shift+ralt for greek letter input.
+    run(args='xmodmap -e "keycode 108 = Multi_key dead_greek Multi_key Multi_key"', shell=True, check=True)
 
     # This X11 stuff is to turn off the caps lock *effect*. If it was turned
     # on, and you somehow no longer have a way to send the CAPS LOCK keycode,
