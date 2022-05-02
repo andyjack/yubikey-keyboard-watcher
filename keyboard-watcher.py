@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-from ctypes import cdll, c_uint
+from ctypes import cdll, c_int, c_uint, POINTER, Structure
 from pyudev import Context, Monitor
 from re import match
 from subprocess import run
 from sys import argv, exit
 from time import sleep
 
+class Display(Structure):
+    """ an opaque structure """
 
 def usage():
     print("""
@@ -41,7 +43,8 @@ def remap():
     #
     # https://askubuntu.com/a/80301
     X11 = cdll.LoadLibrary("libX11.so.6")
-    display = X11.XOpenDisplay(None)
+    X11.XOpenDisplay.restype = POINTER(Display)
+    display = X11.XOpenDisplay(c_int(0))
     # '2' corresponds to Caps Lock
     X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0))
     X11.XCloseDisplay(display)
